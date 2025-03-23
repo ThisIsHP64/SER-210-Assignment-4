@@ -24,54 +24,36 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import dev.gearturner.simpleweather.model.Town
 import dev.gearturner.simpleweather.model.getTowns
-
-@Composable
-fun TownList(navController: NavController) {
-    TownListColumn(
-        TownList = getTowns(),
-        navController = navController
-    )
-}
-
-@Composable
-fun TownListColumn(TownList: List<Town>, navController: NavController) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize())
-    {
-        items(TownList) { town ->
-            TownItem(town = town, onClick = {
-                navController.navigate((Screen.Details.createRoute(town.name)))
-            })
-        }
-    }
-}
+import dev.gearturner.simpleweather.navigation.Screens
 
 @Composable
 fun HomeScreen(navController: NavController) {
     val towns = getTowns()
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ){
-        items(towns) { town ->
-            TownItem(town = town, onClick = {
-                navController.navigate(Screen.Details.createRoute(town.name))
-            })
+        items(towns) {
+            TownItem(town = it) { clickedTownName ->
+                navController.navigate(route = Screens.DetailScreen.name + "/$clickedTownName")
+            }
         }
     }
 }
 
 @Composable
-fun TownItem(town: Town, onClick: () -> Unit) {
+fun TownItem(town: Town, modifier: Modifier = Modifier, itemClick: (String) -> Unit = {}) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(Color.LightGray)
-            .clickable{onClick()}
+            .clickable{
+                itemClick(town.name)
+            }
 
     ) {
         Column(

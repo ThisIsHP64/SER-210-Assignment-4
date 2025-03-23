@@ -21,12 +21,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import dev.gearturner.simpleweather.model.Town
 import dev.gearturner.simpleweather.model.getTowns
 import kotlin.math.roundToInt
 
 @Composable
-fun Details(town: Town) {
+fun DetailScreen(
+    town: Town,
+    navController: NavController,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
