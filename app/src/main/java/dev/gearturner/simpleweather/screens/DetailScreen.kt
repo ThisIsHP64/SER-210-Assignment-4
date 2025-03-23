@@ -21,72 +21,99 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.gearturner.simpleweather.model.Town
+import dev.gearturner.simpleweather.model.getTowns
+import kotlin.math.roundToInt
 
 @Composable
-fun Details(townName: String, currentTemp: String, highestTemp: Int, lowestTemp: Int,
-            windSpeed: String, windDirection: String, humidity: Double, precipitation: Double) {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.White)){
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color.LightGray)
-        ){
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally)
-            {
+fun Details(town: Town) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+            val weather = town.weather
+            if (weather != null) {
+                val current = weather.current
+                val currentUnits = weather.current_units
+                val daily = weather.daily
+                val dailyUnits = weather.daily_units
 
-                Text(text = townName, fontSize = 24.sp)
+                val currentTemp =
+                    "${current.temperature_2m.roundToInt()}${currentUnits.temperature_2m}"
+                val highTemp = daily.temperature_2m_max.firstOrNull()?.roundToInt() ?: 0
+                val lowTemp = daily.temperature_2m_min.firstOrNull()?.roundToInt() ?: 0
 
-                Text(text = currentTemp, fontSize = 24.sp)
+                val windSpeed =
+                    "${current.wind_speed_10m.roundToInt()}${currentUnits.wind_speed_10m}"
+                val windDirection =
+                    "${current.wind_direction_10m}${currentUnits.wind_direction_10m}"
 
-                Row(modifier = Modifier) {
-                    Text(text = "H: $highestTemp", fontSize = 24.sp)
+                val humidity = "${current.relative_humidity_2m}${currentUnits.relative_humidity_2m}"
+                val precipitation = "${current.precipitation}${currentUnits.precipitation}"
 
-                    Spacer(modifier = Modifier
-                        .width(10.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color.LightGray)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    )
+                    {
 
-                    Text(text = "L: $lowestTemp", fontSize = 24.sp)
+                        Text(text = town.name, fontSize = 24.sp)
+
+                        Text(text = currentTemp, fontSize = 24.sp)
+
+                        Row(modifier = Modifier) {
+                            Text(
+                                text = "H: $highTemp${dailyUnits.temperature_2m_max}",
+                                fontSize = 24.sp
+                            )
+
+                            Spacer(
+                                modifier = Modifier
+                                    .width(10.dp)
+                            )
+
+                            Text(
+                                text = "L: $lowTemp${dailyUnits.temperature_2m_min}",
+                                fontSize = 24.sp
+                            )
+                        }
+                    }
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color.LightGray)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(text = "Wind speed: $windSpeed", fontSize = 24.sp)
+
+                        Text(text = "Wind direction: $windDirection", fontSize = 24.sp)
+
+                        Text(text = "Humidity: $humidity", fontSize = 24.sp)
+
+                        Text(text = "Precipitation: $precipitation", fontSize = 24.sp)
+                    }
                 }
             }
         }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color.LightGray)
-        ){
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = "Wind speed: $windSpeed", fontSize = 24.sp)
-
-                Text(text = "Wind direction: $windDirection", fontSize = 24.sp)
-
-                Text(text = "Humidity: $humidity", fontSize = 24.sp)
-
-                Text(text = "Precipitation: $precipitation", fontSize = 24.sp)
-            }
-        }
     }
-}
-
-
-@Preview
-@Composable
-fun previewDetails() {
-    Details("Hamen","40*C", 49, 33, "20mph",
-        "South", 30.2, 20.8)
-}
