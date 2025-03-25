@@ -1,3 +1,10 @@
+/*
+authors: Hunter Pageau (ThisIsHP64), Mohammed Fayed bin Salim (Fayed01428)
+version: 23 Mar 2025
+assignment: SER 210 Assignment 4
+functions to handle navigation, implement TopAppBar, contain app body
+ */
+
 package dev.gearturner.simpleweather.navigation
 
 import android.content.Intent
@@ -46,7 +53,6 @@ import dev.gearturner.simpleweather.screens.HomeScreen
 import dev.gearturner.simpleweather.screens.SettingsScreen
 import kotlinx.coroutines.launch
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavBar(
@@ -65,7 +71,7 @@ fun NavBar(
         colors = TopAppBarDefaults.mediumTopAppBarColors(
             containerColor = containerColor
         ),
-        actions = {
+        actions = { // share button
             if(onShare != null) {
                 IconButton(onClick = onShare) {
                     Icon(
@@ -77,7 +83,7 @@ fun NavBar(
             }
         },
         modifier = modifier,
-        navigationIcon = {
+        navigationIcon = { // show back button if not on HomeScreen
             if(canNavigateBack) {
                 IconButton(onClick = navigateUp) {
                     Icon(
@@ -86,7 +92,7 @@ fun NavBar(
                         contentDescription = null
                     )
                 }
-            } else if(onMenuClick != null) {
+            } else if(onMenuClick != null) { // hamburger menu otherwise
                 IconButton(onClick = onMenuClick) {
                     Icon(
                         imageVector = Icons.Default.Menu,
@@ -99,8 +105,10 @@ fun NavBar(
     )
 }
 
+// navigation ui and logic
 @Composable
 fun WeatherNavigation(viewModel: WeatherViewModel) {
+    // track navigation and variables
     val navController = rememberNavController()
     val viewModel = viewModel
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
@@ -108,6 +116,8 @@ fun WeatherNavigation(viewModel: WeatherViewModel) {
     val canNavigateBack = currentScreen != Screens.HomeScreen
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    // background color change
     val defaultNavBarColor = MaterialTheme.colorScheme.secondary
     var navBarColor by remember { mutableStateOf(defaultNavBarColor) }
     val toggleBackgroundColor = {
@@ -117,9 +127,11 @@ fun WeatherNavigation(viewModel: WeatherViewModel) {
             defaultNavBarColor
     }
 
+    // share prerequisites
     var shareText by remember { mutableStateOf("") }
     val context = LocalContext.current
 
+    // Scaffold that surrounds the screens, contains TopAppBar
     val scaffoldBody = @Composable {
         Scaffold(
             topBar = {
@@ -129,6 +141,7 @@ fun WeatherNavigation(viewModel: WeatherViewModel) {
                     modifier = Modifier,
                     onMenuClick = { scope.launch { drawerState.open() } },
 
+                    // share logic
                     onShare = if(currentScreen == Screens.DetailScreen) {
                         {
                             val sendIntent = Intent(Intent.ACTION_SEND).apply {
@@ -144,6 +157,7 @@ fun WeatherNavigation(viewModel: WeatherViewModel) {
                 )
             }
         ) { innerPadding ->
+            // navigation logic
             NavHost(
                 navController = navController,
                 startDestination = Screens.HomeScreen.name,
@@ -155,6 +169,7 @@ fun WeatherNavigation(viewModel: WeatherViewModel) {
                     HomeScreen(navController = navController)
                 }
 
+                // go to appropriate DetailScreen based on route
                 composable("${Screens.DetailScreen.name}/{townName}") { backStackEntry ->
                     val townName = backStackEntry.arguments?.getString("townName")
                     if(viewModel.towns.isEmpty()) {
@@ -165,7 +180,7 @@ fun WeatherNavigation(viewModel: WeatherViewModel) {
                         shareText = town.weather.toString()
                         DetailScreen(town, navController)
                     } else {
-                        Text("Loading...")
+                        Text("Loading...") // display loading message while waiting for API to respond
                     }
                 }
 
@@ -180,6 +195,7 @@ fun WeatherNavigation(viewModel: WeatherViewModel) {
         }
     }
 
+    // hamburger menu content, only shown if on HomeScreen
     if(currentScreen == Screens.HomeScreen) {
         ModalNavigationDrawer(
             drawerState = drawerState,

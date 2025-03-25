@@ -1,3 +1,10 @@
+/*
+authors: Hunter Pageau (ThisIsHP64), Mohammed Fayed bin Salim (Fayed01428)
+version: 23 Mar 2025
+assignment: SER 210 Assignment 4
+auto-generated weather data class from forecast endpoint json, generated from JsonToKotlinClass plugin
+ */
+
 package dev.gearturner.simpleweather.model
 
 data class Weather(

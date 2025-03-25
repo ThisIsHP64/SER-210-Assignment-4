@@ -1,12 +1,20 @@
+/*
+authors: Hunter Pageau (ThisIsHP64), Mohammed Fayed bin Salim (Fayed01428)
+version: 23 Mar 2025
+assignment: SER 210 Assignment 4
+town data class containing name, latitude, longitude, and current Weather
+ */
+
 package dev.gearturner.simpleweather.model
 
 data class Town(
     val name: String,
     val latitude: Double,
     val longitude: Double,
-    val weather: Weather? = null
+    val weather: Weather? = null // need to initialize this to null so can populate later
 )
 
+// returns a List<Town> containing the towns
 fun getTowns(): List<Town> {
     return listOf<Town>(
         Town(
