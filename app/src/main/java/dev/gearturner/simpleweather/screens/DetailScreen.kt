@@ -1,3 +1,10 @@
+/*
+authors: Hunter Pageau (ThisIsHP64), Mohammed Fayed bin Salim (Fayed01428)
+version: 23 Mar 2025
+assignment: SER 210 Assignment 4
+screen to display weather details for selected town
+ */
+
 package dev.gearturner.simpleweather.screens
 
 import androidx.compose.foundation.background
@@ -34,8 +41,9 @@ fun DetailScreen(
             .fillMaxSize()
             .background(Color.White)
     ) {
-            val weather = town.weather
-            if (weather != null) {
+        // try to retrieve weather
+        val weather = town.weather
+            if (weather != null) { // display if it exists
                 val current = weather.current
                 val currentUnits = weather.current_units
                 val daily = weather.daily
@@ -54,6 +62,7 @@ fun DetailScreen(
                 val humidity = "${current.relative_humidity_2m}${currentUnits.relative_humidity_2m}"
                 val precipitation = "${current.precipitation}${currentUnits.precipitation}"
 
+                // top section (basic info)
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -93,6 +102,7 @@ fun DetailScreen(
                     }
                 }
 
+                // bottom section (detailed info)
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

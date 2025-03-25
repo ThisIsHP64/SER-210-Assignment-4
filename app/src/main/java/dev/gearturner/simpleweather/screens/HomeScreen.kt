@@ -1,3 +1,10 @@
+/*
+authors: Hunter Pageau (ThisIsHP64), Mohammed Fayed bin Salim (Fayed01428)
+version: 23 Mar 2025
+assignment: SER 210 Assignment 4
+home screen, displays list of towns to choose
+ */
+
 package dev.gearturner.simpleweather.screens
 
 import androidx.compose.foundation.background
@@ -34,7 +41,7 @@ fun HomeScreen(navController: NavController) {
     ){
         items(towns) {
             TownItem(town = it) { clickedTownName ->
-                navController.navigate(route = Screens.DetailScreen.name + "/$clickedTownName")
+                navController.navigate(route = Screens.DetailScreen.name + "/$clickedTownName") // navigate to selected town detail screen
             }
         }
     }

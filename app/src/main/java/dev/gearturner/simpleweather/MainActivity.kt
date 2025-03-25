@@ -1,3 +1,10 @@
+/*
+authors: Hunter Pageau (ThisIsHP64), Mohammed Fayed bin Salim (Fayed01428)
+version: 23 Mar 2025
+assignment: SER 210 Assignment 4
+class for app entry point
+ */
+
 package dev.gearturner.simpleweather
 
 import android.os.Bundle
@@ -14,7 +21,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent {
+        setContent { // start app with ViewModel and the main WeatherNavigation composable
             val viewModel: WeatherViewModel = viewModel()
             App { WeatherNavigation(viewModel) }
         }
